@@ -1,12 +1,18 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import config from "../config";
 import { MealDetailData } from "../interfaces/MealDetailData"; // Import the interface here
+import { FaHome } from "react-icons/fa";
 
 function MealDetail() {
   const { id } = useParams<{ id: string }>();
   const [meal, setMeal] = useState<MealDetailData | null>(null);
+  const navigate = useNavigate();
+
+  const goBackHome = () => {
+    navigate("/");
+  };
 
   useEffect(() => {
     const fetchMeal = async () => {
@@ -20,13 +26,18 @@ function MealDetail() {
 
     fetchMeal();
   }, [id]);
-  console.log(meal);
+
   if (!meal) return <p>Loading...</p>;
 
   return (
     <div className="container">
       <div className="m-5">
-        <div className="card" style={{'width': '500px'}}>
+        <FaHome 
+          onClick={goBackHome} 
+          style={{ fontSize: "24px", cursor: "pointer" }} 
+          title="Back to Home" 
+        />
+        <div className="card m-5" style={{'width': '500px'}}>
           <img src={meal.strMealThumb} alt={meal.strMeal} className="card-img-top"/>
           <div className="card-body">
             <h5 className="card-title">{meal.strMeal}</h5>
