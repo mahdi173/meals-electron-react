@@ -57,3 +57,8 @@ a:hover {
   align-items: center;
   margin: 20px 0;
 }
+
+.errors{
+  color: red;
+  text-align: center;
+}

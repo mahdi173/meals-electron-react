@@ -4,42 +4,39 @@ import './css/App.css';
 import SearchBar from './components/SearchBar';
 import MealDetail from "./components/MealDetail";
 import SearchResult from "./components/SearchResult";
-import config from "./config";
 import { Meal } from "./interfaces/Meal";
+import ApiService from './services/ApiService';
 
 function Hello() {
   const [meals, setMeals] = useState<Meal[]>([]);
-  const [defaultMeals, setDefaultMeals] = useState<Meal[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  // Fetch default meals only once when the component mounts
-  useEffect(() => {
-    const fetchMeals = async () => {
-      try {
-        const response = await fetch(`${config.API_SEARCH_URL}?s=a`);
-        const data = await response.json();
-        setMeals(data.meals || []);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchMeals();
-  }, []); // Empty dependency array ensures it runs only once
- 
-  const searchMeals = async (query: string) => {
+  const fetchMeals = async (query = 'a') => {
     try {
-      const response = await fetch(`${config.API_SEARCH_URL}?s=${query}`);
-      const data = await response.json();
-      setMeals(data.meals || []);
+      const response = await ApiService.getInstance().fetchMeals(query);
+      setMeals(response.data.meals || []);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      setMeals([]); // Clear meals to avoid displaying old data
+      setError("Failed to load meals. Please try again later.");
     }
+  };
+  
+  useEffect(() => {
+    fetchMeals(); // Fetch initial meals with default query
+  }, []);
+  
+  const searchMeals = (query: string) => {
+    fetchMeals(query); // Call fetchMeals with the search query
   };
 
   return (
     <div>
       <SearchBar onSearch={searchMeals}/>
-      <SearchResult  meals={meals}/>
+      {error ? (
+        <p className="errors">{error}</p>
+      ) : (
+        <SearchResult  meals={meals}/>
+      )}
     </div>
   );
 }
