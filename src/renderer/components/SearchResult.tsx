@@ -1,17 +1,30 @@
 import { Link } from "react-router-dom";
+import { Meal } from "../interfaces/Meal";
+import styles from '../css/SearchResult.module.css';
 
-function Result ({results}){
+interface ResultsProps {
+    meals: Meal[];
+}
+
+const SearchResult: React.FC<ResultsProps> = ({ meals }) => {
+
+    if (meals.length == 0) {
+        return(
+            <div className="container">
+                <p className={styles.nodata}>Sorry this meal doesn't exist :(</p>
+            </div>
+        );
+    }
+
     return (
-        <div>
+        <div className="container">
             <div className="row">
-                {results.map((meal) => (
-                    <div  className="col-4">
-                        <div key={meal.idMeal} style={{ marginBottom: "20px" }}>
-                        <Link to={`/meal/${meal.idMeal}`} style={{ textDecoration: "none", color: "black" }}>
-                        <h2>{meal.strMeal}</h2>
+                {meals.map((meal) => (
+                    <div  key={meal.idMeal} className="col-4">
+                        <Link to={`/meal/${meal.idMeal}`} className={styles.link}>
+                            <h2>{meal.strMeal}</h2>
+                            <img src={meal.strMealThumb} alt={meal.strMeal} />
                         </Link>
-                        <img src={meal.strMealThumb} alt={meal.strMeal} style={{ width: "200px" }} />
-                        </div>
                     </div>
                 ))}
             </div>
@@ -19,4 +32,4 @@ function Result ({results}){
     );
 };
 
-export default Result;
+export default SearchResult;
