@@ -5,4 +5,6 @@ export interface MealDetailData  extends Meal  {
     strArea: string;
     strTags: string;
     strInstructions: string;
+    strMeasure: string;
+    strIngredient: string;
 }

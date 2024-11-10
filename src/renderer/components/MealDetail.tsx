@@ -37,13 +37,26 @@ function MealDetail() {
           className={styles.home} 
           title="Back to Home" 
         />
-        <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>
+        <p className="errors">{error}</p>
       </div>
     );
   }
 
   if (!meal) return <p>Loading...</p>;
 
+  // Extracting ingredients and measurements
+  const ingredients = [];
+  const measurements = [];
+  
+  for (let i = 1; i <= 10; i++) {
+    const ingredient = meal[`strIngredient${i}`];
+    const measurement = meal[`strMeasure${i}`];
+    if (ingredient && measurement) {
+      ingredients.push(ingredient);
+      measurements.push(measurement);
+    }
+  }
+  
   return (
     <div className="container">
       <div className="m-5">
@@ -52,28 +65,40 @@ function MealDetail() {
           className={styles.home} 
           title="Back to Home" 
         />
-        <div className="card m-5" style={{'width': '500px'}}>
-          <img src={meal.strMealThumb} alt={meal.strMeal} className="card-img-top"/>
-          <div className="card-body">
-            <h5 className="card-title">{meal.strMeal}</h5>
-              </div>
-              <ul className="list-group list-group-flush">
-                <li className="list-group-item">
-                  <h6>Instructions:</h6>
-                  {meal.strInstructions.split('. ').map((step, index) => (
-                    <p key={index} className={styles.instructions}>
-                      {step.trim() + (step.endsWith('.') ? '' : '.')}
-                    </p>
-                  ))}
-                </li>
-                <li className="list-group-item"><strong>Category:</strong> {meal.strCategory}</li>
-                <li className="list-group-item"><strong>Origin:</strong> {meal.strArea}</li>
-                {meal.strTags && (
-                  <li className="list-group-item">
-                    <strong>Tags:</strong> {meal.strTags}
+        <div className="row">
+          <div className="col-8">
+            <div className="card mt-5" style={{'width': '500px'}}>
+              <img src={meal.strMealThumb} alt={meal.strMeal} className="card-img-top"/>
+              <div className="card-body">
+                <h5 className="card-title">{meal.strMeal}</h5>
+                  </div>
+                  <ul className="list-group list-group-flush">
+                    <li className="list-group-item">
+                      <h6>Instructions:</h6>
+                      {meal.strInstructions.split('. ').map((step, index) => (
+                        <p key={index} className={styles.instructions}>
+                          {step.trim() + (step.endsWith('.') ? '' : '.')}
+                        </p>
+                      ))}
+                    </li>
+                    <li className="list-group-item"><strong>Category:</strong> {meal.strCategory}</li>
+                    <li className="list-group-item"><strong>Origin:</strong> {meal.strArea}</li>
+                    {meal.strTags && (
+                      <li className="list-group-item">
+                        <strong>Tags:</strong> {meal.strTags}
+                      </li>
+                    )}
+                  </ul>
+            </div>
+          </div>
+          <div className="col-4 mt-5">
+              <h5>Ingredients</h5>
+              {ingredients.map((ingredient, index) => (
+                  <li key={index}>
+                    <strong>{measurements[index]}</strong> {ingredient}
                   </li>
-                )}
-              </ul>
+              ))}
+          </div>
         </div>
       </div>
     </div>
